@@ -1,50 +1,44 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Infrastructure.EF;
-
-public class AppDbContext : IdentityDbContext<UserEntity>
+namespace Infrastructure.EF
 {
-    protected override void OnModelCreating(ModelBuilder builder)
+    public class AppDbContext : IdentityDbContext<UserEntity>
     {
-        base.OnModelCreating(builder);
-        var adminId = "7fdbd744-81d3-4fa7-a46c-3348520eb328";
-            var createAt = new DateTime( 2025, 1, 1);
-            var adminUser = new UserEntity()
-            {
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            var adminId = "0bb08caa-d013-4715-a64f-a7e77ee77b01";
+            var createdAt = new DateTime(2025, 04, 08);
+            var adimUser = new UserEntity() { 
                 Id = adminId,
-                Email = "admin@gmail.com",
-                NormalizedEmail = "",
+                Email = "admin@wsei.edu.pl",
+                NormalizedEmail = "admin@wsei.edu.pl".ToUpper(),
                 UserName = "admin",
-                NormalizedUserName = "admin",
+                NormalizedUserName = "ADMIN",
                 EmailConfirmed = true,
                 ConcurrencyStamp = adminId,
-                SecurityStamp = adminId,
-                PasswordHash = "AQAAAAIAAYagAAAAECCQAGSQ9zJjhokFh+McPG5SUDwuLoWbYTznBxhuU4SowGDUcR68bJHKtHZQYXtm3g==",
+                PasswordHash = "AQAAAAIAAYagAAAAEDG3hcj+oftRgbbHiXRBcAa0RVrAfZgCuRMN/l3tSrq9zsP7OGuKKZkZ3SUBzG/3Ng==\r\nAQAAAAIAAYagAAAAEJd6yrzWXiQmyjGsf9llxuG3Va8rUUn6NqAaFD1LNZT8GlzkxNZyWtdnLX6htBSO6g=="
+
             };
-            
-            //PasswordHasher<UserEntity> ph = new PasswordHasher<UserEntity>();
-            //var hash = ph.HashPassword(adminUser, password: "1234!");
-            //Console. WriteLine(hash);
-            //adminUser.PasswordHash = hash;
-            builder.Entity<UserEntity>()
-                .HasData(adminUser);
-            
-            builder.Entity<UserEntity>()
-                .OwnsOne(u => u.Details)
+
+            builder.Entity<UserEntity>().HasData(adimUser);
+            builder.Entity<UserEntity>().OwnsOne(u => u.Details)
                 .HasData(new
                 {
                     UserEntityId = adminId,
-                    CreatedAt = createAt
+                    CreatedAt = createdAt
                 });
-
-
-
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlite(connectionString:"data source= plik bazy"); //dodac scierzke
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite(@"data source=c:\Data\app.db");
+        }
     }
 }
